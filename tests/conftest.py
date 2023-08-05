@@ -22,7 +22,7 @@ app.dependency_overrides[get_async_session] = override_get_async_session
 
 # SETUP
 @pytest.fixture(scope='session')
-def event_loop(request):
+def event_loop():
     """Create an instance of the default event loop for each test case."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
