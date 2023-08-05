@@ -1,13 +1,12 @@
 from uuid import UUID
 
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.restaurant.models import Submenu
 from src.database import get_async_session
 from src.restaurant import models, schemas
-from fastapi import Depends
+from src.restaurant.models import Submenu
 
 
 class SubMenuRepository:
@@ -17,7 +16,7 @@ class SubMenuRepository:
 
     async def get_submenus(self, menu_id: UUID, session: AsyncSession) -> list[schemas.Menu]:
         db_submenus = await session.execute(select(models.Submenu).filter(models.Submenu.menu_id == menu_id))
-        return db_submenus.scalars().all()
+        return db_submenus.scalars().all()  # type: ignore
 
     async def create_submenu(self, menu_id: UUID, submenu: schemas.SubmenuBase,
                              session: AsyncSession) -> models.Submenu:
@@ -34,9 +33,9 @@ class SubMenuRepository:
         dishes_count = await session.scalar(
             select(func.count(models.Dish.id)).join(models.Submenu).where(models.Submenu.id == submenu_id))
         return schemas.Submenu(
-            id=str(db_submenu.id),
-            title=db_submenu.title,
-            description=db_submenu.description,
+            id=str(db_submenu.id),  # type: ignore
+            title=db_submenu.title,  # type: ignore
+            description=db_submenu.description,  # type: ignore
             menu_id=menu_id,
             dishes_count=dishes_count
         )
@@ -51,9 +50,9 @@ class SubMenuRepository:
         await session.commit()
         await session.refresh(db_submenu)
         return schemas.Submenu(
-            id=str(db_submenu.id),
-            title=db_submenu.title,
-            description=db_submenu.description,
+            id=str(db_submenu.id),  # type: ignore
+            title=db_submenu.title,  # type: ignore
+            description=db_submenu.description,  # type: ignore
             menu_id=menu_id
         )
 
