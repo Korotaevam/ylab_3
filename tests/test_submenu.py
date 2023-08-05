@@ -24,10 +24,10 @@ async def test_start_clean_submenu_table():
 
 
 # Тест на создание submenu
-async def test_create_submenu(ac):
+async def test_create_submenu(async_client):
     # Создаем новое меню
     data_menu = {'title': 'My menu 1', 'description': 'My menu description 1'}
-    response_menu = await ac.post('/api/v1/menus', json=data_menu)
+    response_menu = await async_client.post('/api/v1/menus', json=data_menu)
     assert response_menu.status_code == 201
 
     # Получаем ID созданного menu
@@ -35,7 +35,7 @@ async def test_create_submenu(ac):
 
     # Создаем новое submenu
     data_submenu = {'title': 'My submenu 1', 'description': 'My submenu description 1'}
-    response_submenu = await ac.post(f'/api/v1/menus/{menu_id}/submenus', json=data_submenu)
+    response_submenu = await async_client.post(f'/api/v1/menus/{menu_id}/submenus', json=data_submenu)
     assert response_submenu.status_code == 201
     submenu_id = response_submenu.json()['id']
     submenu = schemas.Submenu(**response_submenu.json())
@@ -45,14 +45,14 @@ async def test_create_submenu(ac):
 
 
 # Тест на получение списка всех submenu
-async def test_read_submenu(ac):
+async def test_read_submenu(async_client):
     # Получаем ID существующего menu
-    response_menu = await ac.get('/api/v1/menus')
+    response_menu = await async_client.get('/api/v1/menus')
     assert response_menu.status_code == 200
     menu_id = response_menu.json()[0]['id']
 
     # получение списка всех submenu
-    response_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus')
+    response_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus')
     assert response_submenu.status_code == 200
     submenus = [schemas.Submenu(**submenu) for submenu in response_submenu.json()]
     assert len(submenus) > 0
@@ -60,21 +60,21 @@ async def test_read_submenu(ac):
 
 
 # Тест на получение списка submenu по ID
-async def test_read_single_submenu(ac):
+async def test_read_single_submenu(async_client):
     # Получаем ID существующего menu
-    response_menu = await ac.get('/api/v1/menus')
+    response_menu = await async_client.get('/api/v1/menus')
     assert response_menu.status_code == 200
     menu_id = response_menu.json()[0]['id']
 
     # Получаем ID существующего submenu
-    response_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus')
+    response_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus')
     assert response_submenu.status_code == 200
     submenus = response_submenu.json()
     assert len(submenus) > 0
     submenu_id = submenus[0]['id']
 
     # получение списка submenu по ID
-    response_single_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
+    response_single_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
     assert response_single_submenu.status_code == 200
     submenu = schemas.Submenu(**response_single_submenu.json())
     assert submenu.id == uuid.UUID(str(submenu_id))  # преобразуем строку в UUID
@@ -83,14 +83,14 @@ async def test_read_single_submenu(ac):
 
 
 # Тест на обновление submenu
-async def test_update_single_submenu(ac):
+async def test_update_single_submenu(async_client):
     # Получаем ID существующего menu
-    response_menu = await ac.get('/api/v1/menus')
+    response_menu = await async_client.get('/api/v1/menus')
     assert response_menu.status_code == 200
     menu_id = response_menu.json()[0]['id']
 
     # Получаем ID существующего submenu
-    response_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus')
+    response_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus')
     assert response_submenu.status_code == 200
     submenus = response_submenu.json()
     assert len(submenus) > 0
@@ -98,7 +98,7 @@ async def test_update_single_submenu(ac):
 
     # обновление submenu
     updated_submenu = {'title': 'My updated submenu 1', 'description': 'My updated submenu description 1'}
-    response_update_submenu = await ac.patch(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}', json=updated_submenu)
+    response_update_submenu = await async_client.patch(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}', json=updated_submenu)
     assert response_update_submenu.status_code == 200
     updated_submenu_data = schemas.Submenu(**response_update_submenu.json())
 
@@ -108,24 +108,24 @@ async def test_update_single_submenu(ac):
 
 
 # Тест на удаление submenu
-async def test_delete_single_submenu(ac):
+async def test_delete_single_submenu(async_client):
     # Получаем ID существующего menu
-    response_menu = await ac.get('/api/v1/menus')
+    response_menu = await async_client.get('/api/v1/menus')
     assert response_menu.status_code == 200
     menu_id = response_menu.json()[0]['id']
 
     # Получаем ID существующего submenu
-    response_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus')
+    response_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus')
     assert response_submenu.status_code == 200
     submenus = response_submenu.json()
     assert len(submenus) > 0
     submenu_id = submenus[0]['id']
 
-    response_delete_submenu = await ac.delete(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
+    response_delete_submenu = await async_client.delete(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
     assert response_delete_submenu.status_code == 200
     assert response_delete_submenu.json() == {'message': 'Submenu and all associated dishes deleted successfully'}
 
-    response_deleted_submenu = await ac.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
+    response_deleted_submenu = await async_client.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
     assert response_deleted_submenu.status_code == 404
 
 

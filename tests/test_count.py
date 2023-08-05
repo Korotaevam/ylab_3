@@ -28,10 +28,10 @@ async def test_start_clean_dish_table():
 
 
 # Создание dish
-async def test_create_dish(ac):
+async def test_create_dish(async_client):
     # Создаем новое меню
     data_menu = {'title': 'My menu 1', 'description': 'My menu description 1'}
-    response_menu = await ac.post('/api/v1/menus', json=data_menu)
+    response_menu = await async_client.post('/api/v1/menus', json=data_menu)
     assert response_menu.status_code == 201
 
     menu_id = response_menu.json()['id']
@@ -43,7 +43,7 @@ async def test_create_dish(ac):
 
     # Создаем новое submenu
     data_submenu = {'title': 'My submenu 1', 'description': 'My submenu description 1'}
-    response_submenu = await ac.post(f'/api/v1/menus/{menu_id}/submenus', json=data_submenu)
+    response_submenu = await async_client.post(f'/api/v1/menus/{menu_id}/submenus', json=data_submenu)
     assert response_submenu.status_code == 201
 
     submenu_id = response_submenu.json()['id']
@@ -55,7 +55,7 @@ async def test_create_dish(ac):
 
     # Создание dish 1
     new_dish = {'title': 'New dish 1', 'description': 'New dish description 1', 'price': '10.99'}
-    response_dish = await ac.post(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', json=new_dish)
+    response_dish = await async_client.post(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', json=new_dish)
     assert response_dish.status_code == 201
 
     dish = schemas.Dish(**response_dish.json())
@@ -66,7 +66,7 @@ async def test_create_dish(ac):
 
     # Создание dish 2
     new_dish = {'title': 'New dish 2', 'description': 'New dish description 2', 'price': '15.99'}
-    response_dish = await ac.post(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', json=new_dish)
+    response_dish = await async_client.post(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', json=new_dish)
     assert response_dish.status_code == 201
 
     dish = schemas.Dish(**response_dish.json())
@@ -76,7 +76,7 @@ async def test_create_dish(ac):
     assert dish.price == '15.99'
 
     # проверяем количество dish и submenu в menu
-    response_dish_submenu_counts = await ac.get(f'/api/v1/menus/{menu_id}')
+    response_dish_submenu_counts = await async_client.get(f'/api/v1/menus/{menu_id}')
     assert response_dish_submenu_counts.status_code == 200
     dish_counts_menu = schemas.Menu(**response_dish_submenu_counts.json())
 
@@ -84,7 +84,7 @@ async def test_create_dish(ac):
     assert dish_counts_menu.dishes_count == 2
 
     # проверяем количество dish в submenu
-    response_dish_counts = await ac.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
+    response_dish_counts = await async_client.get(f'/api/v1/menus/{menu_id}/submenus/{submenu_id}')
     assert response_dish_counts.status_code == 200
     dish_counts_submenu = schemas.Submenu(**response_dish_counts.json())
 

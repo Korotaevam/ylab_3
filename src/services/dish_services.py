@@ -39,8 +39,11 @@ class DishRepository:
             raise HTTPException(status_code=404, detail='dish not found')
         else:
             db_dish = db_dish_row[0]
-        return schemas.Dish(id=db_dish.id, title=db_dish.title, description=db_dish.description,
-                            price=str(float(round(float(db_dish.price), 2))), submenu_id=db_dish.submenu_id)
+        return schemas.Dish(id=db_dish.id,  # type: ignore
+                            title=db_dish.title,  # type: ignore
+                            description=db_dish.description,  # type: ignore
+                            price=str(float(round(float(db_dish.price), 2))),  # type: ignore
+                            submenu_id=db_dish.submenu_id)  # type: ignore
 
     async def update_dish(self, dish_id: UUID, dish: schemas.DishUpdate, session: AsyncSession) -> schemas.Dish:
         db_dish = await session.get(models.Dish, dish_id)
@@ -51,8 +54,11 @@ class DishRepository:
             setattr(db_dish, field, value)
         await session.commit()
         await session.refresh(db_dish)
-        return schemas.Dish(id=db_dish.id, title=db_dish.title, description=db_dish.description,
-                            price=str(float(round(float(db_dish.price), 2))), submenu_id=db_dish.submenu_id)
+        return schemas.Dish(id=db_dish.id,   # type: ignore
+                            title=db_dish.title,   # type: ignore
+                            description=db_dish.description,  # type: ignore
+                            price=str(float(round(float(db_dish.price), 2))),
+                            submenu_id=db_dish.submenu_id)
 
     async def delete_dish(self, dish_id: UUID, session: AsyncSession) -> dict[str, str]:
         db_dish = await session.get(models.Dish, dish_id)

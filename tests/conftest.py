@@ -10,7 +10,7 @@ from src.main import app
 from src.restaurant.models import metadata
 
 # DATABASE
-metadata.bind = engine
+metadata.bind = engine  # type: ignore
 
 
 async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
@@ -30,9 +30,9 @@ def event_loop():
 
 
 @pytest.fixture(scope='session')
-async def ac() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(app=app, base_url='http://test') as ac:
-        yield ac
+async def async_client() -> AsyncGenerator[AsyncClient, None]:
+    async with AsyncClient(app=app, base_url='http://test') as async_clients:
+        yield async_clients
 
 
 # Тестовая БД
