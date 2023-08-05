@@ -10,27 +10,13 @@ from starlette import status
 
 from src.database import get_async_session
 from src.restaurant import schemas
-from src.services.dish_services import (
-    create_dish,
-    delete_dish,
-    get_dishes,
-    read_dish,
-    update_dish,
-)
-from src.services.menu_services import (
-    create_menu,
-    delete_menu,
-    get_menus,
-    read_menu,
-    update_menu,
-)
-from src.services.submenu_services import (
-    create_submenu,
-    delete_submenu,
-    get_submenus,
-    read_submenu,
-    update_submenu,
-)
+from src.services.dish_services import (create_dish, delete_dish, get_dishes,
+                                        read_dish, update_dish)
+from src.services.menu_services import (create_menu, delete_menu, get_menus,
+                                        read_menu, update_menu)
+from src.services.submenu_services import (create_submenu, delete_submenu,
+                                           get_submenus, read_submenu,
+                                           update_submenu)
 
 router = APIRouter()
 
