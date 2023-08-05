@@ -5,13 +5,13 @@
 
 ```Bash
 Контейнер без запуска тестов
-git clone https://github.com/Korotaevam/ylab_2.git
-cd ylab_2
+git clone https://github.com/Korotaevam/ylab_3.git
+cd ylab_3
 docker-compose up -d
 
 Контейнер с запуском тестов
-git clone https://github.com/Korotaevam/ylab_2.git
-cd ylab_2
+git clone https://github.com/Korotaevam/ylab_3.git
+cd ylab_3
 docker-compose -f docker-compose-test.yml up
 
 -d не писать! иначе не видно как прогоняются тесты
