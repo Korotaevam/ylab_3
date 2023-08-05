@@ -1,0 +1,11 @@
+[flake8]
+
+exclude =
+    venv
+    .venv
+    ./venv
+    venv/
+    .venv/
+
+max-line-length=120
+ignore=E501,F821

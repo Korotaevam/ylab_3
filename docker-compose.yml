@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15.1-alpine
+    container_name: db_app
+    env_file:
+      - .env-non-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 80s
+
+  app:
+    build:
+      context: .
+    env_file:
+      - .env-non-dev
+    container_name: fastapi_app
+    command: sh -c "alembic upgrade head
+      && uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
