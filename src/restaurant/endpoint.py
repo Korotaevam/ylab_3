@@ -1,10 +1,10 @@
 from uuid import UUID
 
+import aioredis
 from fastapi import APIRouter, Depends
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
-from redis import asyncio as aioredis
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
