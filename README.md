@@ -37,3 +37,8 @@ docker-compose -f docker-compose-test.yml up
 
 ﻿﻿﻿﻿﻿Дополнительно:
 Контейнеры с проектом и с тестами запускаются разными командами.
+
+Прохождение всех линтеров
+
+![image](https://github.com/Korotaevam/ylab_3/assets/112647912/c8776702-387a-4309-b1a1-17b585eb4bf7)
+
