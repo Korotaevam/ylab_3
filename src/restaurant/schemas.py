@@ -53,7 +53,6 @@ class DishBase(BaseModel):
     title: str
     description: str | None = None
     price: str
-    # submenu_id: UUID
 
 
 class DishCreate(BaseModel):

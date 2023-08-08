@@ -16,6 +16,8 @@ from src.services.submenu_services import SubMenuRepository
 
 router = APIRouter()
 
+CACHE_TIME = 30
+
 
 @router.on_event('startup')
 async def startup_event():
@@ -26,7 +28,7 @@ async def startup_event():
 
 # Определяем CRUD операции для модели Menu
 @router.get('/api/v1/menus', response_model=list[schemas.Menu])
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def read_menus_handler(skip: int = 0, limit: int = 100, menu: MenuRepository = Depends(),
                              session: AsyncSession = Depends(get_async_session)):
     """ получить меню """
@@ -41,7 +43,7 @@ async def create_menu_handler(menu_data: schemas.MenuCreate, menu: MenuRepositor
 
 
 @router.get('/api/v1/menus/{menu_id}', response_model=schemas.Menu)
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def read_menu_handler(menu_id: UUID, menu: MenuRepository = Depends(),
                             session: AsyncSession = Depends(get_async_session)):
     """ получить меню по id """
@@ -65,7 +67,7 @@ async def delete_menu_handler(menu_id: UUID, menu: MenuRepository = Depends(),
 # Определяем CRUD операции для модели Submenu
 
 @router.get('/api/v1/menus/{menu_id}/submenus', response_model=list[schemas.Menu])
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def get_submenus_handler(menu_id: UUID, submenu: SubMenuRepository = Depends(),
                                session: AsyncSession = Depends(get_async_session)):
     """ получить субменю """
@@ -81,7 +83,7 @@ async def create_submenu_handler(menu_id: UUID, submenu_data: schemas.SubmenuBas
 
 
 @router.get('/api/v1/menus/{menu_id}/submenus/{submenu_id}', response_model=schemas.Submenu)
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def read_submenu_handler(menu_id: UUID, submenu_id: UUID, submenu: SubMenuRepository = Depends(),
                                session: AsyncSession = Depends(get_async_session)):
     """ прочитать субменю по id"""
@@ -105,7 +107,7 @@ async def delete_submenu_handler(menu_id: UUID, submenu_id: UUID, submenu: SubMe
 
 # # Определяем CRUD операции для модели Dish
 @router.get('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes', response_model=list[schemas.Dish])
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def get_dishes_handler(submenu_id: UUID, skip: int = 0, limit: int = 100,
                              dish: DishRepository = Depends(),
                              session: AsyncSession = Depends(get_async_session)):
@@ -123,7 +125,7 @@ async def create_dish_handler(submenu_id: UUID, dish_data: schemas.DishCreate,
 
 
 @router.get('/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}', response_model=schemas.Dish)
-@cache(expire=30)
+@cache(expire=CACHE_TIME)
 async def read_dish_handler(dish_id: UUID, dish: DishRepository = Depends(),
                             session: AsyncSession = Depends(get_async_session)):
     """ получить блюдо по id """

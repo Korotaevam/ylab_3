@@ -54,8 +54,8 @@ class DishRepository:
             setattr(db_dish, field, value)
         await session.commit()
         await session.refresh(db_dish)
-        return schemas.Dish(id=db_dish.id,   # type: ignore
-                            title=db_dish.title,   # type: ignore
+        return schemas.Dish(id=db_dish.id,  # type: ignore
+                            title=db_dish.title,  # type: ignore
                             description=db_dish.description,  # type: ignore
                             price=str(float(round(float(db_dish.price), 2))),
                             submenu_id=db_dish.submenu_id)
